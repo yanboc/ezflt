@@ -199,11 +199,13 @@ if __name__ == "__main__":
     plot_path = CONFIG["plotting"]["plot_path"]
     os.makedirs(plot_path, exist_ok=True)
 
-    for exp_id in all_kernels_inner_product.keys():
+    def plot_kernel_heatmaps(exp_id, use_tight_layout=False):
+        """绘制核范数和内积热力图的公共函数"""
         C = all_kernels_inner_product[exp_id].shape[1]
         plot_values_ip = numpy.zeros((10, C))
         plot_values_norm = numpy.zeros((10, C))
         fig, axes = plt.subplots(2, 1, figsize=(C, 10*2))
+        
         for i in range(10): 
             plot_values_norm[i, :] = all_kernels_norm[exp_id][i * num_epochs]
             plot_values_ip[i, :] = all_kernels_inner_product[exp_id][i * num_epochs] / plot_values_norm[i, :]
@@ -232,45 +234,18 @@ if __name__ == "__main__":
         ax_ip.set_xlabel("Kernel Index")
         ax_ip.set_ylabel("Epoch")
 
+        if use_tight_layout:
+            plt.tight_layout()
         plt.savefig(os.path.join(plot_path, f"{exp_id}.png"))
         plt.close()
 
+    # 第一次绘制（不使用tight_layout）
     for exp_id in all_kernels_inner_product.keys():
-        C = all_kernels_inner_product[exp_id].shape[1]
-        plot_values_ip = numpy.zeros((10, C))
-        plot_values_norm = numpy.zeros((10, C))
-        fig, axes = plt.subplots(2, 1, figsize=(C, 10*2))
-        for i in range(10): 
-            plot_values_norm[i, :] = all_kernels_norm[exp_id][i * num_epochs]
-            plot_values_ip[i, :] = all_kernels_inner_product[exp_id][i * num_epochs] / plot_values_norm[i, :]
-        
-        ax_norm = sns.heatmap(
-            data=plot_values_norm * 10, 
-            annot=True, 
-            fmt=".4f", 
-            cmap="coolwarm", 
-            square=False,
-            ax=axes[1])
-        ax_norm.set_title(f"Kernels Norm Heat Map for {exp_id} (scaled by 10)")
-        ax_norm.set_xlabel("Kernel Index")
-        ax_norm.set_ylabel("Epoch")
+        plot_kernel_heatmaps(exp_id, use_tight_layout=False)
 
-        ax_ip = sns.heatmap(
-            data=plot_values_ip, 
-            annot=True, 
-            fmt=".3f", 
-            cmap="coolwarm", 
-            vmin=0, 
-            vmax=1, 
-            square=False,
-            ax=axes[0])
-        ax_ip.set_title(f"Inner Product Heat Map for {exp_id}")
-        ax_ip.set_xlabel("Kernel Index")
-        ax_ip.set_ylabel("Epoch")
-
-        plt.tight_layout()
-        plt.savefig(os.path.join(plot_path, f"{exp_id}.png"))
-        plt.close()
+    # 第二次绘制（使用tight_layout）
+    for exp_id in all_kernels_inner_product.keys():
+        plot_kernel_heatmaps(exp_id, use_tight_layout=True)
 
     # for exp_id in all_kernels_norm.keys():
     #     C = all_kernels_norm[exp_id].shape[1]

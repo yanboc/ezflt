@@ -10,6 +10,7 @@ from .trainer import Trainer
 from .task import LearningTask, create_learning_task_from_config
 from .data import Generator
 from .model import FLTNetwork
+from .experiment import ExperimentManager, create_experiment_manager
 from .plot import (
     visualize_feature_evolution,
     visualize_features_heatmap,
@@ -30,6 +31,8 @@ __all__ = [
     "create_learning_task_from_config",
     "Generator",
     "FLTNetwork",
+    "ExperimentManager",
+    "create_experiment_manager",
     "visualize_feature_evolution",
     "visualize_features_heatmap",
     "visualize_parameter_comparison",

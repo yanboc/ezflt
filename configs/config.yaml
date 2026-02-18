@@ -1,0 +1,67 @@
+# Hydra配置文件
+# 这是ezflt的默认实验配置
+
+defaults:
+  - experiment: default
+  - _self_
+
+# 实验配置
+experiment:
+  name: default_experiment
+  seed: 42
+  device: cuda  # 或 cpu
+
+# 数据配置
+data:
+  generate_data: true
+  data_type: tensor
+  train_size: 4000
+  test_size: 1000
+  batch_size: 64
+  shuffle: true
+  parameters:
+    P: [20, 28, 36, 44, 52, 60]
+    d_P_ratio: [1.2]
+    C_d_ratio: [1.2]
+    NNF_ratio: [0.5]
+    NRP_ratio: [0.1]
+
+# 模型配置
+model:
+  task: generation
+  arch: shallow
+  parameters:
+    input_dim: [64, 28, 28]
+    output_dim: 10
+    num_classes: 10
+
+# 训练配置
+training:
+  epochs: 100
+  learning_rate: 0.1
+  optimizer: sgd
+  loss_function: mse
+
+# 评估配置
+evaluation:
+  evaluate: true
+  metrics: [accuracy]
+
+# 可视化配置
+plotting:
+  save_plots: true
+  feature_visualization: true
+
+# Wandb配置
+wandb:
+  project: ezflt-experiments
+  enabled: true
+
+# 特征追踪配置
+tracking:
+  enabled: true
+  layers: []  # 空列表表示追踪所有层
+  track_weights: true
+  track_gradients: false
+  track_frequency: 1
+

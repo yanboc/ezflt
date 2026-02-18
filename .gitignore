@@ -216,3 +216,6 @@ site/
 # folder.cnf files (should not be tracked)
 folder.cnf
 **/folder.cnf
+
+# Wandb (experiment tracking cache - data is stored in cloud)
+wandb/
