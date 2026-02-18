@@ -208,3 +208,7 @@ __marimo__/
 
 # Agent
 .agent/
+
+# Documentation
+docs/_build/
+site/
