@@ -1,0 +1,80 @@
+[project]
+name = "ezflt"
+version = "0.1.0"
+description = "Easy Feature Learning Theory - 特征学习理论友好库 (by Yanbo Chen, with the help of Cursor Agent)"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [
+    {name = "Yanbo Chen"}
+]
+keywords = ["deep-learning", "feature-learning", "pytorch", "flt"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+dependencies = [
+    "torch>=2.0.0",
+    "tqdm>=4.66.5",
+    "seaborn>=0.13.2",
+    "matplotlib>=3.7.1",
+    "numpy>=1.20.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+]
+docs = [
+    "mkdocs>=1.5.0",
+    "mkdocs-material>=9.0.0",
+    "mkdocstrings[python]>=0.24.0",
+]
+wandb = [
+    "wandb>=0.15.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/yanboc/ezflt"
+Documentation = "https://github.com/yanboc/ezflt"
+Repository = "https://github.com/yanboc/ezflt"
+Issues = "https://github.com/yanboc/ezflt/issues"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ezflt"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+addopts = [
+    "-v",
+    "--tb=short",
+    "--strict-markers",
+]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+ignore = []
+
