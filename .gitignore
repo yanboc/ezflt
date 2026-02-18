@@ -212,3 +212,7 @@ __marimo__/
 # Documentation
 docs/_build/
 site/
+
+# folder.cnf files (should not be tracked)
+folder.cnf
+**/folder.cnf
