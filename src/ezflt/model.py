@@ -3,8 +3,6 @@ Implementation of shallow (i.e., 2-layer) neural network architectures
 '''
 
 from dataclasses import dataclass
-import json
-from config import CONFIG
 
 @dataclass
 class ModelConfig:

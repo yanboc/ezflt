@@ -11,7 +11,6 @@ import seaborn as sns
 from typing import Dict, List, Optional, Union
 from .tracker import Feature, FeatureTracker
 
-
 def visualize_feature_evolution(
     feature: Feature,
     save_path: Optional[str] = None,
@@ -56,7 +55,6 @@ def visualize_feature_evolution(
         plt.close()
     else:
         plt.show()
-
 
 def visualize_features_heatmap(
     tracker: FeatureTracker,

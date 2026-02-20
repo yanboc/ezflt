@@ -4,6 +4,8 @@
 展示如何使用Hydra进行配置管理和多组实验。
 """
 
+from pathlib import Path
+
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader, TensorDataset
@@ -12,6 +14,9 @@ from hydra.core.global_hydra import GlobalHydra
 from omegaconf import DictConfig, OmegaConf
 
 from ezflt import Trainer, FeatureTracker, FeatureTrackingCallback, ExperimentManager
+
+# 配置目录：相对本脚本所在目录，指向项目根下的 configs（任意 CWD 均可运行）
+_CONFIG_DIR = Path(__file__).resolve().parent.parent / "configs"
 
 
 class SimpleModel(nn.Module):
@@ -37,7 +42,7 @@ def train_with_config(cfg: DictConfig):
     
     # 创建实验管理器
     exp_manager = ExperimentManager(
-        config_path="configs",
+        config_path=str(_CONFIG_DIR),
         project_name=cfg.wandb.project if cfg.wandb.enabled else None,
         experiment_name=cfg.experiment.name,
         use_wandb=cfg.wandb.enabled,
@@ -152,20 +157,14 @@ def main_with_hydra(cfg: DictConfig):
 
 
 if __name__ == "__main__":
-    # 检查是否使用了hydra装饰器
     try:
         from hydra import main as hydra_main
-        # 如果已经装饰，直接运行
-        if hasattr(main, '__wrapped__'):
-            main()
-        else:
-            # 手动初始化Hydra
-            if GlobalHydra.instance().is_initialized():
-                GlobalHydra.instance().clear()
-            
-            with initialize(config_path="configs", version_base="1.1"):
-                cfg = compose(config_name="config")
-                train_with_config(cfg)
+
+        @hydra_main(config_path=str(_CONFIG_DIR), config_name="config", version_base="1.1")
+        def main(cfg: DictConfig):
+            main_with_hydra(cfg)
+
+        main()
     except ImportError:
         print("错误: 需要安装hydra-core")
         print("安装命令: pip install hydra-core")

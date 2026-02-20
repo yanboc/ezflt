@@ -7,9 +7,8 @@ ezflt基本使用示例
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader, TensorDataset
-from ezflt import FeatureTracker, FeatureTrackingCallback, WandbCallback, Trainer
+from ezflt import FeatureTracker, FeatureTrackingCallback, Trainer
 from ezflt.plot import visualize_feature_evolution, visualize_features_heatmap
-
 
 # 1. 定义模型
 class SimpleNet(nn.Module):
@@ -46,10 +45,7 @@ tracker = FeatureTracker(
 )
 
 # 4. 创建回调
-callbacks = [
-    FeatureTrackingCallback(tracker),
-    # WandbCallback(project="ezflt-demo"),  # 可选：集成wandb
-]
+callbacks = [FeatureTrackingCallback(tracker)]
 
 # 5. 创建训练器并训练
 trainer = Trainer(
@@ -60,6 +56,8 @@ trainer = Trainer(
 
 trainer.fit(train_loader=dataloader, num_epochs=5)
 
+import ipdb; ipdb.set_trace()
+
 # 6. 可视化结果
 # 可视化单个特征的演化
 conv1_weight = tracker.get_feature("conv1.weight")
@@ -67,7 +65,9 @@ if conv1_weight:
     visualize_feature_evolution(conv1_weight, metric="norm", save_path="conv1_evolution.png")
 
 # 可视化所有特征的热力图
-visualize_features_heatmap(tracker, epoch=4, save_path="features_heatmap.png")
+figure_dir = Path("figures")
+figure_dir.mkdir(exist_ok=True)
+visualize_features_heatmap(tracker, epoch=4, save_path=figure_dir / "features_heatmap.pdf")
 
 print("训练完成！特征追踪结果已保存。")
 

@@ -219,3 +219,6 @@ folder.cnf
 
 # Wandb (experiment tracking cache - data is stored in cloud)
 wandb/
+
+# Outputs
+outputs/

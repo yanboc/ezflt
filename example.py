@@ -2,7 +2,7 @@
 This example demonstrates how to use ezflt to perform reconstruction-based anomaly detection (RBAD).
 
 Usage:
-    1. Install ezflt: pip install -e .
+    1. Install ezflt: pip install -e . (cf README.md for more details)
     2. Run the example: python example.py
 
 References:
