@@ -49,22 +49,59 @@ with ExperimentManager(
 配置文件位于 `configs/config.yaml`。可以通过命令行覆盖参数：
 
 ```bash
-python train.py training.learning_rate=0.01 training.epochs=50
+# 使用@hydra.main装饰器（推荐）
+python examples/train_with_hydra_simple.py training.learning_rate=0.01 training.epochs=50
+
+# 或手动初始化Hydra
+python examples/train_with_hydra.py training.learning_rate=0.01
 ```
 
 ### 4. 多组实验（参数扫描）
 
-使用 Hydra 的多组实验功能：
+使用 Hydra 的多组实验功能（multirun）：
 
 ```bash
-# 扫描学习率
-python train.py -m training.learning_rate=0.001,0.01,0.1
+# 扫描学习率（会运行3次实验）
+python examples/train_with_hydra_simple.py -m training.learning_rate=0.001,0.01,0.1
 
-# 扫描多个参数
-python train.py -m training.learning_rate=0.001,0.01 training.epochs=10,20,30
+# 扫描多个参数（会运行3x3=9次实验）
+python examples/train_with_hydra_simple.py -m training.learning_rate=0.001,0.01,0.1 training.epochs=10,20,30
+
+# 使用网格搜索
+python examples/train_with_hydra_simple.py -m training.learning_rate=0.001,0.01 training.epochs=10,20
 ```
 
 每次运行会自动创建新的 Wandb 实验记录。
+
+### 5. 使用@hydra.main装饰器（推荐方式）
+
+最简单的方式是使用 `@hydra.main` 装饰器：
+
+```python
+from hydra import main
+from omegaconf import DictConfig
+
+@main(config_path="configs", config_name="config", version_base="1.1")
+def train(cfg: DictConfig):
+    # cfg包含所有配置
+    print(f"学习率: {cfg.training.learning_rate}")
+    print(f"Epochs: {cfg.training.epochs}")
+    
+    # 创建实验管理器
+    exp_manager = ExperimentManager(
+        use_wandb=True,
+        use_hydra=True,
+    )
+    exp_manager.hydra_cfg = cfg
+    exp_manager._hydra_initialized = True
+    
+    # ... 训练代码 ...
+
+if __name__ == "__main__":
+    train()
+```
+
+查看 `examples/train_with_hydra_simple.py` 获取完整示例。
 
 ## 配置说明
 
